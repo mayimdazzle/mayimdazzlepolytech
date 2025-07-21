@@ -11,6 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Send } from "lucide-react";
+import emailjs from "emailjs-com"; // add at the top
+
+// Ensure you have the correct environment variables set
+const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const userId = import.meta.env.VITE_EMAILJS_USER_ID;
+
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -32,7 +39,7 @@ const inputVariants = {
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  
+
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
@@ -46,16 +53,36 @@ export default function ContactForm() {
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for your inquiry. We'll get back to you soon.",
-    });
-    
-    form.reset();
+
+    try {
+      await emailjs.send(
+        serviceId!,     // replace with your actual service ID
+         templateId!,    // replace with your actual template ID
+        {
+          name: data.name,
+          email: data.email,
+          phone: data.phone || "N/A",
+          inquiryType: data.inquiryType,
+          message: data.message,
+        },
+         userId!      // replace with your actual public key
+      );
+
+      toast({
+        title: "Message Sent!",
+        description: "Thank you for your inquiry. We'll get back to you soon.",
+      });
+
+      form.reset();
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again later.",
+        variant: "destructive",
+      });
+    }
+
     setIsSubmitting(false);
   };
 
@@ -78,7 +105,7 @@ export default function ContactForm() {
                     <FormLabel className="text-slate-300">Name *</FormLabel>
                     <FormControl>
                       <motion.div variants={inputVariants} whileFocus="focus">
-                        <Input 
+                        <Input
                           {...field}
                           className="bg-slate-700 border-slate-600 text-white focus:border-accent"
                           placeholder="Your full name"
@@ -98,7 +125,7 @@ export default function ContactForm() {
                     <FormLabel className="text-slate-300">Email *</FormLabel>
                     <FormControl>
                       <motion.div variants={inputVariants} whileFocus="focus">
-                        <Input 
+                        <Input
                           {...field}
                           type="email"
                           className="bg-slate-700 border-slate-600 text-white focus:border-accent"
@@ -119,7 +146,7 @@ export default function ContactForm() {
                     <FormLabel className="text-slate-300">Phone</FormLabel>
                     <FormControl>
                       <motion.div variants={inputVariants} whileFocus="focus">
-                        <Input 
+                        <Input
                           {...field}
                           type="tel"
                           className="bg-slate-700 border-slate-600 text-white focus:border-accent"
@@ -164,7 +191,7 @@ export default function ContactForm() {
                     <FormLabel className="text-slate-300">Message *</FormLabel>
                     <FormControl>
                       <motion.div variants={inputVariants} whileFocus="focus">
-                        <Textarea 
+                        <Textarea
                           {...field}
                           className="bg-slate-700 border-slate-600 text-white focus:border-accent min-h-[120px]"
                           placeholder="Tell us about your requirements..."
@@ -180,8 +207,8 @@ export default function ContactForm() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isSubmitting}
                   className="w-full bg-accent text-slate-900 hover:bg-amber-400 font-semibold py-3"
                 >

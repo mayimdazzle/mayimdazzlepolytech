@@ -18,18 +18,23 @@ export default function CompanyTimeline() {
   const milestones = [
     {
       year: "2003",
-      event: "Dazzle Infomedia established",
-      description: "Founded as a software solutions company"
+      event: "Establishment of Dazzle Infomedia",
+      description: "Launched as a software solutions provider, laying the foundation for digital innovation."
     },
     {
-      year: "2010",
-      event: "MayimDazzle India Private Limited founded",
-      description: "Expanded into comprehensive digital services"
+      year: "2014",
+      event: "Incorporation of Dazzle Systech India Pvt. Ltd.",
+      description: "Diversified into full-spectrum digital services, expanding our technology footprint."
+    },
+    {
+      year: "2023",
+      event: "Founding of MayimDazzle India Pvt. Ltd.",
+      description: "Strengthened our position in digital services through a new entity and strategic growth."
     },
     {
       year: "2024",
-      event: "Mayim Dazzle Polytech launched",
-      description: "Entered manufacturing with EPDM rubber granules"
+      event: "Launch of Mayim Dazzle Polytech",
+      description: "Ventured into manufacturing with a focus on EPDM rubber granules for industrial applications."
     }
   ];
 
@@ -39,7 +44,7 @@ export default function CompanyTimeline() {
       <div className="relative">
         {/* Timeline line */}
         <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-accent to-primary"></div>
-        
+
         <div className="space-y-4">
           {milestones.map((milestone, index) => (
             <motion.div
@@ -52,14 +57,14 @@ export default function CompanyTimeline() {
               variants={timelineVariants}
             >
               {/* Timeline dot */}
-              <motion.div 
+              <motion.div
                 className="w-8 h-8 bg-accent rounded-full border-4 border-white shadow-lg flex items-center justify-center relative z-10"
                 whileHover={{ scale: 1.2 }}
                 transition={{ duration: 0.2 }}
               >
                 <div className="w-2 h-2 bg-white rounded-full"></div>
               </motion.div>
-              
+
               {/* Content */}
               <div className="flex-1">
                 <Card className="bg-white shadow-sm border-l-4 border-accent">

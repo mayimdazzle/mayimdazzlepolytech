@@ -54,7 +54,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-x-hidden" id="home">
       <ParticleBackground />
       <AnimatedNavbar />
       <AnimatedHero />
@@ -109,7 +109,7 @@ export default function Home() {
                 >
                   <h3 className="text-2xl font-bold text-slate-900 mb-4">Our Mission</h3>
                   <p className="text-slate-600 leading-relaxed">
-                    Operating from India, we focus on manufacturing <strong>EPDM Rubber Granules</strong> 
+                    Operating from India, we focus on manufacturing <strong>EPDM Rubber Granules </strong> 
                     with unmatched flexibility in color and size customization, backed by experienced 
                     rubber technologists.
                   </p>
@@ -283,7 +283,7 @@ export default function Home() {
                       <Phone className="text-accent" size={20} />
                       <div>
                         <div className="font-medium">Phone</div>
-                        <div className="text-slate-300">Contact via parent company</div>
+                        <div className="text-slate-300">+91 94883 94000</div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
