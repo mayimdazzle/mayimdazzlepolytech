@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Download, FileText, Factory } from "lucide-react";
-import { generateCompanyBrochure } from "@/lib/pdf-generator"; // Adjust the import path as necessary
+import { Download, FileText } from "lucide-react";
+import { generateCompanyBrochure } from "@/lib/pdf-generator";
 
 export default function BrochureGenerator() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const generateBrochure = async () => {
     setIsGenerating(true);
-    
     try {
       await generateCompanyBrochure();
     } catch (error) {
@@ -21,66 +19,24 @@ export default function BrochureGenerator() {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-0 shadow-lg">
-      <CardContent className="p-8 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+    <div className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl text-left flex flex-col md:flex-row items-center gap-6 shadow-xl">
+       <div className="bg-white p-4 rounded-xl text-primary shadow-lg">
+          <FileText size={40} />
+       </div>
+       <div className="flex-1">
+          <h3 className="text-xl font-bold text-white mb-1">Download Corporate Brochure</h3>
+          <p className="text-slate-400 text-sm">Full catalog, technical data sheets (TDS), and company certifications.</p>
+       </div>
+       <Button 
+          onClick={generateBrochure}
+          disabled={isGenerating}
+          size="lg"
+          className="bg-accent hover:bg-amber-500 text-slate-900 font-bold whitespace-nowrap"
         >
-          <div className="mb-6">
-            <motion.div
-              className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-            >
-              <FileText className="text-white" size={32} />
-            </motion.div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">Company Brochure</h3>
-            <p className="text-slate-600">
-              Download our comprehensive brochure with product details, company information, and contact details.
-            </p>
-          </div>
-          
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Button 
-              onClick={generateBrochure}
-              disabled={isGenerating}
-              size="lg"
-              className="bg-accent text-slate-900 hover:bg-amber-400 font-semibold px-8 py-3"
-            >
-              {isGenerating ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full mr-3"
-                />
-              ) : (
-                <Download className="mr-3" size={20} />
-              )}
-              {isGenerating ? 'Generating...' : 'Download Brochure'}
-            </Button>
-          </motion.div>
-          
-          <div className="mt-6 grid grid-cols-3 gap-4 text-sm text-slate-600">
-            <div className="flex items-center justify-center space-x-2">
-              <Factory size={16} className="text-primary" />
-              <span>Company Info</span>
-            </div>
-            <div className="flex items-center justify-center space-x-2">
-              <div className="w-4 h-4 bg-accent rounded-full"></div>
-              <span>Product Details</span>
-            </div>
-            <div className="flex items-center justify-center space-x-2">
-              <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-              <span>Contact Info</span>
-            </div>
-          </div>
-        </motion.div>
-      </CardContent>
-    </Card>
+          {isGenerating ? "Processing..." : (
+             <span className="flex items-center"><Download className="mr-2" size={18} /> Download PDF</span>
+          )}
+        </Button>
+    </div>
   );
 }

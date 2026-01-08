@@ -3,25 +3,16 @@ import { motion } from "framer-motion";
 import AnimatedNavbar from "@/components/animated-navbar";
 import AnimatedHero from "@/components/animated-hero";
 import ProductShowcase from "@/components/product-showcase";
-import CompanyTimeline from "@/components/company-timeline";
 import ContactForm from "@/components/contact-form";
-import ParticleBackground from "@/components/particle-background";
 import InteractiveGranuleShowcase from "@/components/interactive-granule-showcase";
-import GranulePileAnimation from "@/components/granule-pile-animation";
 import ClientsMarquee from "@/components/clients-marquee";
 import ProjectGallery from "@/components/project-gallery";
 import StatsSection from "@/components/stats-section";
-import { Factory, MapPin, Phone, Mail, ExternalLink, ArrowRight } from "lucide-react";
+import BrochureGenerator from "@/components/brochure-generator";
+import CompanyTimeline from "@/components/company-timeline";
+import GranulePileAnimation from "@/components/granule-pile-animation";
+import { ArrowRight, ChevronRight, Layers, ShieldCheck, Trophy, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.8, ease: "easeOut" }
-  }
-};
 
 export default function Home() {
   useEffect(() => {
@@ -40,182 +31,209 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden font-sans" id="home">
-      <ParticleBackground />
+    <div className="min-h-screen bg-white font-sans" id="home">
       <AnimatedNavbar />
       
       <main>
-        {/* 1. Hero Section */}
+        {/* 1. HERO SECTION */}
         <AnimatedHero />
         
-        {/* 2. Trust Indicators */}
-        <ClientsMarquee />
-        
-        {/* 3. Main Product Focus */}
-        <motion.section 
-          id="products"
-          className="py-24 bg-slate-50 relative z-10"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={sectionVariants}
-        >
+        {/* 2. STATS BAR (High Contrast) */}
+        <section className="bg-slate-900 py-12 border-b border-slate-800">
+           <StatsSection />
+        </section>
+
+        {/* 3. SECTORS OVERVIEW */}
+        <section id="products" className="py-24 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16 max-w-3xl mx-auto">
-              <span className="text-accent font-semibold tracking-wider uppercase text-sm">Our Core Product</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mt-2 mb-6">Premium EPDM Granules</h2>
-              <p className="text-xl text-slate-600">
-                Engineered for durability, available in vibrant colors, and customized for your specific application needs.
+              <span className="text-primary font-bold tracking-widest uppercase text-xs mb-2 block">Our Expertise</span>
+              <h2 className="text-4xl font-bold text-slate-900 mb-6">Engineered for Performance</h2>
+              <p className="text-lg text-slate-600">
+                We deliver specialized EPDM granule solutions tailored to the unique demands of global sports, safety, and industrial sectors.
               </p>
             </div>
-            
-            <ProductShowcase />
-            
-            <div className="mt-20">
-              <InteractiveGranuleShowcase />
+
+            <div className="grid md:grid-cols-3 gap-8 mb-20">
+              {/* Sports */}
+              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group">
+                <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6">
+                  <Trophy size={24} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-slate-900">Sports Surfaces</h3>
+                <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                  Shock-absorbing granules for running tracks, tennis courts, and multipurpose arenas. Engineered for energy return and athlete safety.
+                </p>
+                <a href="#contact" className="text-blue-600 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
+                  Request Specs <ChevronRight size={16} className="ml-1" />
+                </a>
+              </div>
+
+              {/* Safety */}
+              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group">
+                <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-6">
+                  <ShieldCheck size={24} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-slate-900">Playground Safety</h3>
+                <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                  Critical Fall Height (CFH) compliant surfaces. UV-stable colors that create engaging, safe play environments for children.
+                </p>
+                <a href="#contact" className="text-amber-600 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
+                  View Safety Data <ChevronRight size={16} className="ml-1" />
+                </a>
+              </div>
+
+              {/* Industrial */}
+              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group">
+                <div className="w-12 h-12 bg-slate-200 text-slate-700 rounded-lg flex items-center justify-center mb-6">
+                  <Layers size={24} />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-slate-900">Industrial Flooring</h3>
+                <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                  Heavy-duty, chemical-resistant rubber compounding for factory floors, walkways, and custom OEM applications.
+                </p>
+                <a href="#contact" className="text-slate-700 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
+                  Industrial Solutions <ChevronRight size={16} className="ml-1" />
+                </a>
+              </div>
+            </div>
+
+            {/* TECHNICAL SPECS INTEGRATION */}
+            <div className="border-t border-slate-100 pt-20">
+               <div className="mb-10">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Technical Data</h3>
+                  <p className="text-slate-500">Standardized specifications for global compliance.</p>
+               </div>
+               <ProductShowcase />
             </div>
           </div>
-        </motion.section>
+        </section>
 
-        {/* 4. Stats & Impact */}
-        <StatsSection />
+        {/* 4. INNOVATION / COLOR MIXER */}
+        <section className="py-24 bg-slate-50 border-y border-slate-200 overflow-hidden">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <div className="inline-block bg-white border border-slate-200 px-3 py-1 rounded-full text-xs font-bold text-slate-500 mb-6">
+                  Interactive Tools
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Visualizing Excellence</h2>
+                <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+                  Our state-of-the-art laboratory ensures every batch meets rigorous standards for color consistency. 
+                  Use our interactive tool to explore our standard vibrant palette tailored for high-UV environments.
+                </p>
+                
+                <ul className="space-y-4 mb-10">
+                  {['ISO 9001:2015 Certified Process', '100% Virgin Polymer Base', 'Custom Color Matching Available'].map((item, i) => (
+                    <li key={i} className="flex items-center text-slate-700 font-medium">
+                      <CheckCircle2 className="text-primary mr-3" size={20} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
 
-        {/* 5. Project Gallery (New Site Photos) */}
+                <Button className="bg-slate-900 text-white hover:bg-slate-800 rounded-full px-8 h-12">
+                  Download Color Chart
+                </Button>
+              </div>
+              
+              <div className="relative">
+                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-amber-50 rounded-3xl transform rotate-3 scale-105" />
+                 <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-slate-100">
+                    <InteractiveGranuleShowcase />
+                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. PROJECT GALLERY */}
         <ProjectGallery />
 
-        {/* 6. Company History/About */}
-        <motion.section 
-          id="about"
-          className="py-24 bg-white relative z-10"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={sectionVariants}
-        >
+        {/* 6. COMPANY HISTORY & DOWNLOADS */}
+        <section id="about" className="py-24 bg-white">
           <div className="container mx-auto px-4">
-            {/* items-stretch ensures both columns are same height */}
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-stretch max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-16">
               
-              <div className="order-2 lg:order-1 relative h-full min-h-[500px]">
-                 {/* Background Blur Effect */}
-                 <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-amber-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
-                 {/* Animation fills the height */}
-                 <GranulePileAnimation className="h-full w-full" />
-              </div>
-              
-              <div className="order-1 lg:order-2 flex flex-col justify-center space-y-8 py-4">
-                <div>
-                  <h2 className="text-4xl font-bold text-slate-900 mb-6">A Legacy of Innovation</h2>
-                  <div className="prose prose-lg text-slate-600">
-                    <p className="mb-4">
-                      <strong>Mayim Dazzle Polytech</strong> represents the convergence of manufacturing excellence and technological innovation. 
-                      As a subsidiary of <strong>MayimDazzle India Pvt Ltd</strong>, we carry forward a 20-year legacy started by Dazzle Infomedia.
-                    </p>
-                    <p>
-                      Located in Dharmapuri, Tamil Nadu, our state-of-the-art facility is dedicated to producing high-grade EPDM rubber granules 
-                      that set industry standards for color consistency and weather resistance.
-                    </p>
-                  </div>
-                </div>
-                
+              {/* Left: Timeline */}
+              <div>
+                <h2 className="text-3xl font-bold text-slate-900 mb-8">A Legacy of Innovation</h2>
                 <CompanyTimeline />
-                
               </div>
+
+              {/* Right: Brochure & Visuals */}
+              <div className="flex flex-col gap-8">
+                 <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100">
+                    <h3 className="text-xl font-bold mb-4">Manufacturing Excellence</h3>
+                    <GranulePileAnimation />
+                 </div>
+                 
+                 <div>
+                    <h3 className="text-xl font-bold mb-4">Downloads</h3>
+                    <BrochureGenerator />
+                 </div>
+              </div>
+
             </div>
           </div>
-        </motion.section>
+        </section>
 
-        {/* 7. Contact */}
-        <motion.section 
-          id="contact"
-          className="py-24 bg-slate-900 text-white relative z-10"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={sectionVariants}
-        >
-          {/* Background pattern */}
-          <div className="absolute inset-0 opacity-10" 
-               style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '40px 40px' }}>
-          </div>
+        {/* 7. CLIENTS */}
+        <ClientsMarquee />
 
-          <div className="container mx-auto px-4 relative">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-16">
-                <div>
-                  <h2 className="text-4xl font-bold mb-6">Let's Build Something Great</h2>
-                  <p className="text-xl text-slate-300 mb-10">
-                    Need a quote for your next sports complex or playground project? 
-                    Our team is ready to assist with samples and technical specifications.
-                  </p>
-                  
-                  <div className="space-y-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-white/10 p-3 rounded-lg text-accent">
-                        <MapPin size={24} />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-lg">Factory Address</h4>
-                        <p className="text-slate-400 mt-1">Dharmapuri, Tamil Nadu, India</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-white/10 p-3 rounded-lg text-accent">
-                        <Phone size={24} />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-lg">Contact Number</h4>
-                        <p className="text-slate-400 mt-1">+91 94883 94000</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-white/10 p-3 rounded-lg text-accent">
-                        <Mail size={24} />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-lg">Email Us</h4>
-                        <p className="text-slate-400 mt-1">info@polytech.mayimdazzle.com</p>
-                      </div>
+        {/* 8. CONTACT */}
+        <section id="contact" className="py-24 bg-slate-50 border-t border-slate-200">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col md:flex-row">
+               <div className="p-10 md:p-12 md:w-1/2 bg-slate-900 text-white flex flex-col justify-between">
+                  <div>
+                    <h2 className="text-3xl font-bold mb-6">Let's Build Together</h2>
+                    <p className="text-slate-300 mb-8">
+                      Whether you need a sample kit or a full container load quote, our technical sales team is ready to assist.
+                    </p>
+                    <div className="space-y-4">
+                       <div className="flex items-start gap-4">
+                          <div className="bg-white/10 p-2 rounded text-accent"><CheckCircle2 size={20}/></div>
+                          <div>
+                             <div className="font-bold">Headquarters</div>
+                             <div className="text-slate-400 text-sm">Dharmapuri, Tamil Nadu, India</div>
+                          </div>
+                       </div>
+                       <div className="flex items-start gap-4">
+                          <div className="bg-white/10 p-2 rounded text-accent"><CheckCircle2 size={20}/></div>
+                          <div>
+                             <div className="font-bold">Direct Line</div>
+                             <div className="text-slate-400 text-sm">+91 94883 94000</div>
+                          </div>
+                       </div>
                     </div>
                   </div>
-
-                  <div className="mt-12 p-6 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="bg-primary p-2 rounded-lg">
-                        <Factory className="text-white" size={20} />
-                      </div>
-                      <div>
-                        <div className="font-bold">Parent Company</div>
-                        <div className="text-sm text-slate-400">MayimDazzle India Pvt Ltd</div>
-                      </div>
-                    </div>
-                    <a 
-                      href="https://mayimdazzle.com" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-sm text-accent hover:text-white transition-colors flex items-center"
-                    >
-                      Visit Corporate Website <ExternalLink size={14} className="ml-1" />
-                    </a>
+                  <div className="mt-12 text-xs text-slate-500">
+                     MayimDazzle India Pvt Ltd © 2025
                   </div>
-                </div>
-
-                <div className="bg-white rounded-2xl p-8 text-slate-900 shadow-2xl">
-                  <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
+               </div>
+               
+               <div className="p-8 md:p-12 md:w-1/2">
                   <ContactForm />
-                </div>
-              </div>
+               </div>
             </div>
           </div>
-        </motion.section>
+        </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-black text-white py-12 border-t border-white/10">
-        <div className="container mx-auto px-4 text-center text-slate-500 text-sm">
-          <p>&copy; 2024 Mayim Dazzle Polytech. All rights reserved.</p>
+      {/* FOOTER */}
+      <footer className="bg-white border-t border-slate-200 py-12">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm">
+          <div className="mb-4 md:mb-0">
+            <span className="font-bold text-slate-900">Mayim Dazzle Polytech</span>
+            <span className="mx-2">|</span>
+            <span>A Subsidiary of MayimDazzle India Pvt Ltd</span>
+          </div>
+          <div className="flex gap-6">
+             <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
+             <a href="#" className="hover:text-primary transition-colors">Terms & Conditions</a>
+             <a href="#" className="hover:text-primary transition-colors">Sitemap</a>
+          </div>
         </div>
       </footer>
     </div>

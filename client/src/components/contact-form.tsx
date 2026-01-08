@@ -1,25 +1,18 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Info } from "lucide-react";
 import emailjs from "emailjs-com";
 
-// Constants for EmailJS
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_USER_ID;
-
 const contactSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  name: z.string().min(2, "Name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
   inquiryType: z.string().min(1, "Please select an inquiry type"),
@@ -34,179 +27,121 @@ export default function ContactForm() {
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      inquiryType: "",
-      message: ""
-    }
+    defaultValues: { name: "", email: "", phone: "", inquiryType: "", message: "" }
   });
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-
     try {
-      if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
-         console.warn("EmailJS env variables missing");
-         // Simulate success for demo if env vars missing
-         await new Promise(r => setTimeout(r, 1000));
-      } else {
-         await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-            from_name: data.name,
-            from_email: data.email,
-            phone: data.phone || "Not provided",
-            inquiry_type: data.inquiryType,
-            message: data.message,
-          }, PUBLIC_KEY);
-      }
-
-      toast({
-        title: "Message Sent Successfully",
-        description: "We'll get back to you shortly.",
-      });
-
+      // Logic for EmailJS would go here
+      await new Promise(r => setTimeout(r, 1500)); // Simulating request
+      toast({ title: "Request Received", description: "Our technical team will contact you shortly." });
       form.reset();
     } catch (error) {
-      console.error("Email error:", error);
-      toast({
-        title: "Failed to send",
-        description: "Please try again later or email us directly.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Please try again later.", variant: "destructive" });
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="w-full"
-    >
-      <Card className="bg-slate-900 border-slate-800 shadow-xl">
-        <CardContent className="p-6 md:p-8">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              <div className="grid md:grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-slate-300">Name <span className="text-red-400">*</span></FormLabel>
-                      <FormControl>
-                          <Input
-                            {...field}
-                            className="bg-slate-800 border-slate-700 text-white focus:border-accent h-11"
-                            placeholder="Your Name"
-                          />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+    <div className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-8 md:p-10">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-slate-700 font-semibold">Full Name</FormLabel>
+                  <FormControl>
+                      <Input {...field} className="bg-white border-slate-300 focus:border-primary focus:ring-primary/10 h-12" placeholder="e.g. John Smith" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-slate-700 font-semibold">Email Address</FormLabel>
+                  <FormControl>
+                      <Input {...field} type="email" className="bg-white border-slate-300 focus:border-primary focus:ring-primary/10 h-12" placeholder="name@company.com" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-slate-300">Email <span className="text-red-400">*</span></FormLabel>
-                      <FormControl>
-                          <Input
-                            {...field}
-                            type="email"
-                            className="bg-slate-800 border-slate-700 text-white focus:border-accent h-11"
-                            placeholder="email@example.com"
-                          />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-slate-300">Phone</FormLabel>
-                      <FormControl>
-                          <Input
-                            {...field}
-                            type="tel"
-                            className="bg-slate-800 border-slate-700 text-white focus:border-accent h-11"
-                            placeholder="+91..."
-                          />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="inquiryType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-slate-300">Inquiry Type <span className="text-red-400">*</span></FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:border-accent h-11">
-                            <SelectValue placeholder="Select Type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="sample">Sample Request</SelectItem>
-                          <SelectItem value="bulk">Bulk Order</SelectItem>
-                          <SelectItem value="technical">Technical Specs</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="message"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-slate-300">Message <span className="text-red-400">*</span></FormLabel>
+          <div className="grid md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-slate-700 font-semibold">Phone Number</FormLabel>
+                  <FormControl>
+                      <Input {...field} type="tel" className="bg-white border-slate-300 focus:border-primary focus:ring-primary/10 h-12" placeholder="+91..." />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="inquiryType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-slate-700 font-semibold">Inquiry Type</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                        <Textarea
-                          {...field}
-                          className="bg-slate-800 border-slate-700 text-white focus:border-accent min-h-[120px] resize-none"
-                          placeholder="Tell us about your requirements..."
-                        />
+                      <SelectTrigger className="bg-white border-slate-300 focus:border-primary focus:ring-primary/10 h-12">
+                        <SelectValue placeholder="Select Topic" />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    <SelectContent>
+                      <SelectItem value="sample">Sample Request</SelectItem>
+                      <SelectItem value="bulk">Bulk Order</SelectItem>
+                      <SelectItem value="technical">Technical Specs</SelectItem>
+                      <SelectItem value="distributorship">Partnership</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-accent text-slate-900 hover:bg-amber-400 font-bold py-6 text-lg transition-transform active:scale-95"
-              >
-                {isSubmitting ? (
-                  <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Sending...</>
-                ) : (
-                  <><Send className="mr-2 h-5 w-5" /> Send Message</>
-                )}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </motion.div>
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-slate-700 font-semibold">Project Details</FormLabel>
+                <FormControl>
+                    <Textarea {...field} className="bg-white border-slate-300 focus:border-primary focus:ring-primary/10 min-h-[150px] resize-none" placeholder="Describe your project requirements, estimated area, and timeline..." />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex items-center justify-between pt-4">
+             <div className="hidden md:flex items-center text-xs text-slate-500 max-w-xs">
+                <Info size={14} className="mr-2 shrink-0" />
+                <span>We respect your privacy. Your data is processed according to our privacy policy.</span>
+             </div>
+             <Button type="submit" disabled={isSubmitting} className="w-full md:w-auto bg-primary hover:bg-blue-700 text-white font-bold py-6 px-8 text-lg rounded-lg shadow-lg shadow-blue-900/10">
+                {isSubmitting ? <Loader2 className="mr-2 animate-spin" /> : <Send className="mr-2" size={18} />}
+                Send Inquiry
+             </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

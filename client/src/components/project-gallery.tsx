@@ -1,36 +1,36 @@
 import { motion } from "framer-motion";
-import { ZoomIn, MapPin, Calendar } from "lucide-react";
+import { ZoomIn, MapPin } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 
-// Updated with your new Wonderla Site Project photos and existing assets
+// Updated with your images
 const projects = [
   { 
     src: "/Wonderla Site Project/IMG-20251009-WA0006.jpg", 
-    title: "Theme Park Flooring", 
+    title: "Wonderla Theme Park", 
     category: "Recreational",
-    location: "Wonderla Amusement Park",
-    className: "md:col-span-2 md:row-span-2" // Large feature image
+    location: "Bangalore",
+    className: "md:col-span-2 md:row-span-2" 
   },
   { 
     src: "/court.jpg", 
-    title: "Professional Sports Court", 
+    title: "Pro Sports Complex", 
     category: "Sports",
-    location: "Bangalore Sports Complex",
+    location: "Karnataka",
     className: "md:col-span-1 md:row-span-1" 
   },
   { 
-    src: "/Wonderla Site Project/IMG-20251009-WA0008.jpg", 
-    title: "Water Park Safety Surface", 
+    src: "/playground.jpg", 
+    title: "Intl. School Play Area", 
     category: "Safety",
-    location: "Wonderla",
+    location: "Hyderabad",
     className: "md:col-span-1 md:row-span-1"
   },
   { 
     src: "/gym.jpg", 
-    title: "Premium Gym Flooring", 
+    title: "Gold's Gym Flooring", 
     category: "Fitness",
-    location: "Gold's Gym",
+    location: "Mumbai",
     className: "md:col-span-1 md:row-span-1" 
   },
   { 
@@ -41,84 +41,84 @@ const projects = [
     className: "md:col-span-1 md:row-span-1" 
   },
   { 
-    src: "/Wonderla Site Project/WhatsApp Image 2025-10-12 at 13.56.11_715da06b.jpg", 
-    title: "EPDM Granule Mixing", 
-    category: "Process",
-    location: "On-Site",
-    className: "md:col-span-1 md:row-span-1" 
-  },
-  { 
     src: "/Wonderla Site Project/IMG-20251009-WA0016.jpg", 
-    title: "Kids Play Zone", 
+    title: "Kids Safety Zone", 
     category: "Playground",
     location: "Wonderla",
-    className: "md:col-span-2 md:row-span-1" // Wide image
+    className: "md:col-span-2 md:row-span-1" 
   }
 ];
 
 export default function ProjectGallery() {
   return (
-    <section className="py-24 bg-slate-50" id="gallery">
+    <section className="py-24 bg-white" id="gallery">
       <div className="container mx-auto px-4">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <Badge variant="outline" className="mb-4 border-primary text-primary px-4 py-1">Portfolio</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Our Work in Action</h2>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            From premier amusement parks like <strong>Wonderla</strong> to professional sports complexes, 
-            explore how our EPDM solutions transform spaces.
-          </p>
-        </motion.div>
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+          <div className="max-w-2xl">
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">Selected Projects</h2>
+            <p className="text-lg text-slate-600">
+              From high-traffic theme parks to professional athletic surfaces, our granules define durability.
+            </p>
+          </div>
+          <div className="hidden md:block">
+             <Badge variant="outline" className="px-4 py-2 text-sm rounded-full border-slate-300 text-slate-600">
+                View Full Portfolio
+             </Badge>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[280px] gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[300px] gap-6">
           {projects.map((project, index) => (
             <Dialog key={index}>
               <DialogTrigger asChild>
                 <motion.div
-                  className={`group relative overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-xl transition-all ${project.className}`}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+                  className={`group relative overflow-hidden rounded-lg cursor-pointer bg-slate-100 ${project.className}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <div className="absolute inset-0 bg-slate-200 animate-pulse" /> {/* Placeholder while loading */}
                   <img
                     src={project.src}
                     alt={project.title}
-                    className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+                    className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
                   
-                  {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                    <Badge className="self-start mb-2 bg-accent text-slate-900 hover:bg-accent/90">
-                      {project.category}
-                    </Badge>
-                    <h3 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
-                      {project.title} <ZoomIn size={16} className="text-accent" />
-                    </h3>
-                    <div className="flex items-center text-slate-300 text-sm">
-                      <MapPin size={14} className="mr-1" /> {project.location}
+                  {/* Clean White Overlay Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <div className="flex justify-between items-end">
+                      <div>
+                         <span className="text-xs font-bold text-accent uppercase tracking-wider mb-1 block">
+                            {project.category}
+                         </span>
+                         <h3 className="text-xl font-bold text-white leading-tight">
+                            {project.title}
+                         </h3>
+                         <div className="flex items-center text-slate-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <MapPin size={14} className="mr-1" /> {project.location}
+                         </div>
+                      </div>
+                      <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                         <ZoomIn className="text-white" size={20} />
+                      </div>
                     </div>
                   </div>
                 </motion.div>
               </DialogTrigger>
-              <DialogContent className="max-w-5xl bg-transparent border-none p-0 shadow-2xl overflow-hidden">
-                <div className="relative">
+              <DialogContent className="max-w-5xl bg-white border-none p-1 shadow-2xl rounded-xl">
+                <div className="relative rounded-lg overflow-hidden">
                   <img
                     src={project.src}
                     alt={project.title}
-                    className="w-full max-h-[85vh] object-contain rounded-lg"
+                    className="w-full max-h-[85vh] object-contain"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
-                    <h3 className="text-2xl font-bold">{project.title}</h3>
-                    <p className="text-slate-300 flex items-center gap-2 mt-1">
-                      <MapPin size={16} /> {project.location}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-white/90 backdrop-blur-md border-t border-slate-200">
+                    <h3 className="text-2xl font-bold text-slate-900">{project.title}</h3>
+                    <p className="text-slate-600 flex items-center gap-2 mt-1">
+                      <MapPin size={16} className="text-primary" /> {project.location}
                     </p>
                   </div>
                 </div>

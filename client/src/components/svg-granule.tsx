@@ -3,67 +3,49 @@ import { motion } from "framer-motion";
 interface SvgGranuleProps {
   color: string;
   size: number;
-  animationDelay?: number;
-  className?: string;
+  animationDelay: number;
 }
 
-export default function SvgGranule({ color, size, animationDelay = 0, className = "" }: SvgGranuleProps) {
+export default function SvgGranule({ color, size, animationDelay }: SvgGranuleProps) {
   return (
     <motion.svg
       width={size}
       height={size}
-      viewBox="0 0 20 20"
-      className={className}
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, delay: animationDelay }}
-      whileHover={{ scale: 1.2, rotate: 360 }}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="drop-shadow-sm" // Soft shadow for depth
+      animate={{
+        scale: [1, 1.05, 1],
+        rotate: [0, 5, -5, 0],
+      }}
+      transition={{
+        duration: 4,
+        delay: animationDelay,
+        repeat: Infinity,
+        repeatType: "reverse",
+      }}
     >
-      <defs>
-        <radialGradient id={`granule-gradient-${color}-${size}`} cx="30%" cy="30%">
-          <stop offset="0%" stopColor={color} stopOpacity="0.9" />
-          <stop offset="100%" stopColor={color} stopOpacity="0.7" />
-        </radialGradient>
-        <filter id={`shadow-${color}-${size}`}>
-          <feDropShadow dx="2" dy="2" stdDeviation="2" floodOpacity="0.3" />
-        </filter>
-      </defs>
-      
-      <motion.circle
-        cx="10"
-        cy="10"
-        r="8"
-        fill={`url(#granule-gradient-${color}-${size})`}
-        filter={`url(#shadow-${color}-${size})`}
-        animate={{
-          r: [8, 9, 8],
-          opacity: [0.7, 0.9, 0.7]
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: animationDelay
-        }}
+      <path
+        d="M12 2C16.5 2 20 5.5 21 10C21.5 12.5 20.5 15 19 17C17.5 19 15 21 12 21C8 21 4.5 18.5 3 15C1.5 11.5 2.5 7 5 4.5C7.5 2 9.5 2 12 2Z"
+        fill={color}
       />
       
-      {/* Highlight */}
-      <motion.circle
-        cx="7"
-        cy="7"
-        r="2"
-        fill="white"
-        fillOpacity="0.3"
-        animate={{
-          r: [2, 2.5, 2],
-          fillOpacity: [0.3, 0.5, 0.3]
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: animationDelay + 0.5
-        }}
+      {/* Highlight: White is still good for shine */}
+      <path
+        d="M8 6C10 4 13 4 15 5"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+      
+      {/* Shadow/Edge Definition: Darker stroke for Light Mode */}
+      <path
+        d="M12 2C16.5 2 20 5.5 21 10C21.5 12.5 20.5 15 19 17C17.5 19 15 21 12 21C8 21 4.5 18.5 3 15C1.5 11.5 2.5 7 5 4.5C7.5 2 9.5 2 12 2Z"
+        stroke="black"
+        strokeWidth="0.5"
+        opacity="0.1" // Subtle outline
       />
     </motion.svg>
   );

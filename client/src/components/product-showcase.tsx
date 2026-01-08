@@ -1,116 +1,82 @@
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Ruler, Palette, Shield } from "lucide-react";
-import SvgGranule from "./svg-granule";
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
-  },
-  hover: { 
-    y: -5,
-    transition: { duration: 0.2 }
-  }
-};
+import { Ruler, Palette, ShieldCheck, Check } from "lucide-react";
 
 export default function ProductShowcase() {
-  const products = [
+  const features = [
     {
-      icon: <Ruler className="text-primary" size={28} />,
-      title: "Size Flexibility",
-      description: "Custom granule sizes tailored to your needs",
-      colors: ["#F59E0B", "#3B82F6", "#64748B"],
-      sizes: [
-        { range: "1-3 mm", size: 12 },
-        { range: "2-4 mm", size: 16 },
-        { range: "7-8 mm", size: 20 }
-      ]
+      icon: <Ruler className="text-primary" size={24} />,
+      title: "Granule Grading",
+      content: (
+        <div className="space-y-3">
+          <p className="text-sm text-slate-600 mb-2">Precision-cut EPDM granules available in standard industry sizes.</p>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+             <div className="bg-slate-50 border border-slate-100 p-2 rounded text-center font-semibold text-slate-700">1.0 - 3.0 mm</div>
+             <div className="bg-slate-50 border border-slate-100 p-2 rounded text-center font-semibold text-slate-700">0.5 - 1.5 mm</div>
+             <div className="bg-slate-50 border border-slate-100 p-2 rounded text-center font-semibold text-slate-700">1.0 - 4.0 mm</div>
+             <div className="bg-slate-50 border border-slate-100 p-2 rounded text-center font-semibold text-slate-700">Custom Mix</div>
+          </div>
+        </div>
+      )
     },
     {
-      icon: <Palette className="text-accent" size={28} />,
-      title: "Color Variety",
-      description: "Unlimited vibrant color combinations available",
-      colors: ["#EF4444", "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#F97316", "#EC4899", "#06B6D4"]
+      icon: <Palette className="text-accent" size={24} />,
+      title: "Color Stability",
+      content: (
+        <div className="space-y-3">
+          <p className="text-sm text-slate-600">UV-resistant pigments ensuring long-term color retention in harsh climates.</p>
+          <div className="flex flex-wrap gap-2">
+             {["Red", "Blue", "Green", "Amber", "Purple", "Orange"].map((c, i) => (
+               <div key={i} className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                  <div className={`w-3 h-3 rounded-full`} style={{ backgroundColor: c.toLowerCase() }} />
+                  <span className="text-xs font-medium text-slate-700">{c}</span>
+               </div>
+             ))}
+          </div>
+        </div>
+      )
     },
     {
-      icon: <Shield className="text-green-600" size={28} />,
-      title: "Quality Assured",
-      description: "Rigorous testing and ISO certification",
-      specs: [
-          { label: "Durability", value: "High" },
-          { label: "UV Stable", value: "Yes" },
-          { label: "Eco-Safe", value: "Yes" }
-      ],
-      colors: ["#10B981", "#3B82F6", "#059669"]
+      icon: <ShieldCheck className="text-emerald-600" size={24} />,
+      title: "Technical Properties",
+      content: (
+        <ul className="space-y-2 text-sm">
+          {[
+            { label: "Polymer Content", value: "> 20%" },
+            { label: "Hardness", value: "60 ± 5 Shore A" },
+            { label: "Tensile Strength", value: "> 3.0 Mpa" },
+            { label: "Elongation", value: "> 400%" },
+          ].map((spec, i) => (
+            <li key={i} className="flex justify-between items-center border-b border-slate-100 last:border-0 pb-1.5 last:pb-0">
+              <span className="text-slate-500">{spec.label}</span>
+              <span className="font-bold text-slate-900">{spec.value}</span>
+            </li>
+          ))}
+        </ul>
+      )
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-      {products.map((product, index) => (
+    <div className="grid md:grid-cols-3 gap-6">
+      {features.map((feature, index) => (
         <motion.div
           key={index}
-          variants={cardVariants}
-          initial="hidden"
-          whileInView="visible"
-          whileHover="hover"
-          viewport={{ once: true, margin: "-50px" }}
-          className="h-full"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: index * 0.1 }}
         >
-          <Card className="h-full bg-white shadow-md hover:shadow-xl transition-shadow border-slate-100 overflow-hidden">
-            <CardContent className="p-6 md:p-8 text-center flex flex-col h-full">
-              <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
-                {product.icon}
+          <Card className="h-full border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center gap-4 pb-2">
+              <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100">
+                 {feature.icon}
               </div>
-              
-              <h3 className="text-xl font-bold text-slate-900 mb-3">{product.title}</h3>
-              <p className="text-slate-600 mb-6 text-sm flex-grow">{product.description}</p>
-              
-              {product.sizes && product.sizes.length > 0 && (
-                <div className="space-y-3 mt-auto">
-                  {product.sizes.map((size, sizeIndex) => (
-                    <div key={sizeIndex} className="flex items-center justify-between bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                      <span className="text-sm font-semibold text-slate-700">{size.range}</span>
-                      <div className="flex items-center justify-center w-8">
-                        <SvgGranule
-                          color={product.colors[sizeIndex % product.colors.length]}
-                          size={size.size}
-                          animationDelay={sizeIndex * 0.2}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              
-              {product.colors && product.colors.length > 1 && (!product.sizes || product.sizes.length === 0) && (
-                <div className="grid grid-cols-4 gap-3 mt-auto justify-items-center">
-                  {product.colors.map((color, colorIndex) => (
-                    <div key={colorIndex} className="p-1">
-                      <SvgGranule
-                        color={color}
-                        size={22}
-                        animationDelay={colorIndex * 0.1}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-              
-              {product.specs && (
-                <div className="space-y-2 mt-auto text-sm">
-                  {product.specs.map((spec, specIndex) => (
-                    <div key={specIndex} className="flex items-center justify-between border-b border-slate-50 last:border-0 py-1">
-                      <span className="text-slate-500">{spec.label}</span>
-                      <Badge variant="outline" className="font-medium bg-green-50 text-green-700 border-green-100">{spec.value}</Badge>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <CardTitle className="text-lg font-bold text-slate-900">{feature.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {feature.content}
             </CardContent>
           </Card>
         </motion.div>
