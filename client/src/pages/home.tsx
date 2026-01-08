@@ -8,6 +8,9 @@ import ContactForm from "@/components/contact-form";
 import ParticleBackground from "@/components/particle-background";
 import InteractiveGranuleShowcase from "@/components/interactive-granule-showcase";
 import GranulePileAnimation from "@/components/granule-pile-animation";
+import ClientsMarquee from "@/components/clients-marquee";
+import ProjectGallery from "@/components/project-gallery";
+import StatsSection from "@/components/stats-section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Factory, Palette, Shield, Ruler, MapPin, Phone, Mail, ExternalLink } from "lucide-react";
@@ -58,6 +61,7 @@ export default function Home() {
       <ParticleBackground />
       <AnimatedNavbar />
       <AnimatedHero />
+      <ClientsMarquee />
       
       {/* About Section */}
       <motion.section 
@@ -121,6 +125,8 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
+
+      <StatsSection />
 
       {/* Products Section */}
       <motion.section 
@@ -186,6 +192,8 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
+
+      <ProjectGallery />
 
       {/* Applications Section */}
       <motion.section 
