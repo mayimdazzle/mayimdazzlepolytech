@@ -3,9 +3,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 export default function AnimatedHero() {
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="relative h-[85vh] flex items-center overflow-hidden bg-slate-900">
-      {/* Background Image with Overlay - Using your 'court.jpg' as a placeholder for a hero shot */}
       <div className="absolute inset-0 z-0">
         <img 
           src="/court.jpg" 
@@ -54,10 +58,19 @@ export default function AnimatedHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <Button size="lg" className="bg-primary hover:bg-blue-600 text-white font-semibold px-8 h-12 rounded-full text-base">
+            <Button 
+              size="lg" 
+              onClick={() => scrollTo('products')}
+              className="bg-primary hover:bg-blue-600 text-white font-semibold px-8 h-12 rounded-full text-base"
+            >
               Explore Products
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-slate-900 h-12 rounded-full px-8 text-base bg-transparent">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              onClick={() => scrollTo('contact')}
+              className="border-white text-white hover:bg-white hover:text-slate-900 h-12 rounded-full px-8 text-base bg-transparent"
+            >
               Contact Sales <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </motion.div>

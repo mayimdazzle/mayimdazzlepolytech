@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+// ... imports remain the same ...
 import { motion } from "framer-motion";
 import AnimatedNavbar from "@/components/animated-navbar";
 import AnimatedHero from "@/components/animated-hero";
@@ -15,35 +16,24 @@ import { ArrowRight, ChevronRight, Layers, ShieldCheck, Trophy, CheckCircle2 } f
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  useEffect(() => {
-    const handleSmoothScroll = (e: Event) => {
-      const target = e.target as HTMLAnchorElement;
-      if (target.hash) {
-        e.preventDefault();
-        const element = document.querySelector(target.hash);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    };
-    document.addEventListener('click', handleSmoothScroll);
-    return () => document.removeEventListener('click', handleSmoothScroll);
-  }, []);
+  // Helper for scroll
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="min-h-screen bg-white font-sans" id="home">
       <AnimatedNavbar />
       
       <main>
-        {/* 1. HERO SECTION */}
         <AnimatedHero />
         
-        {/* 2. STATS BAR (High Contrast) */}
         <section className="bg-slate-900 py-12 border-b border-slate-800">
            <StatsSection />
         </section>
 
-        {/* 3. SECTORS OVERVIEW */}
+        {/* PRODUCTS SECTION */}
         <section id="products" className="py-24 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16 max-w-3xl mx-auto">
@@ -55,62 +45,55 @@ export default function Home() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 mb-20">
-              {/* Sports */}
-              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group">
+              {/* Cards with Fixed Links */}
+              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group cursor-pointer" onClick={() => scrollTo('contact')}>
                 <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6">
                   <Trophy size={24} />
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-slate-900">Sports Surfaces</h3>
                 <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                  Shock-absorbing granules for running tracks, tennis courts, and multipurpose arenas. Engineered for energy return and athlete safety.
+                  Shock-absorbing granules for running tracks, tennis courts, and multipurpose arenas.
                 </p>
-                <a href="#contact" className="text-blue-600 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
+                <span className="text-blue-600 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
                   Request Specs <ChevronRight size={16} className="ml-1" />
-                </a>
+                </span>
               </div>
 
-              {/* Safety */}
-              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group">
+              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group cursor-pointer" onClick={() => scrollTo('contact')}>
                 <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-6">
                   <ShieldCheck size={24} />
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-slate-900">Playground Safety</h3>
                 <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                  Critical Fall Height (CFH) compliant surfaces. UV-stable colors that create engaging, safe play environments for children.
+                  Critical Fall Height (CFH) compliant surfaces. UV-stable colors.
                 </p>
-                <a href="#contact" className="text-amber-600 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
+                <span className="text-amber-600 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
                   View Safety Data <ChevronRight size={16} className="ml-1" />
-                </a>
+                </span>
               </div>
 
-              {/* Industrial */}
-              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group">
+              <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-all group cursor-pointer" onClick={() => scrollTo('contact')}>
                 <div className="w-12 h-12 bg-slate-200 text-slate-700 rounded-lg flex items-center justify-center mb-6">
                   <Layers size={24} />
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-slate-900">Industrial Flooring</h3>
                 <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                  Heavy-duty, chemical-resistant rubber compounding for factory floors, walkways, and custom OEM applications.
+                  Heavy-duty, chemical-resistant rubber compounding.
                 </p>
-                <a href="#contact" className="text-slate-700 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
+                <span className="text-slate-700 font-bold text-sm flex items-center group-hover:translate-x-1 transition-transform">
                   Industrial Solutions <ChevronRight size={16} className="ml-1" />
-                </a>
+                </span>
               </div>
             </div>
 
-            {/* TECHNICAL SPECS INTEGRATION */}
             <div className="border-t border-slate-100 pt-20">
-               <div className="mb-10">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Technical Data</h3>
-                  <p className="text-slate-500">Standardized specifications for global compliance.</p>
-               </div>
                <ProductShowcase />
             </div>
           </div>
         </section>
 
         {/* 4. INNOVATION / COLOR MIXER */}
-        <section className="py-24 bg-slate-50 border-y border-slate-200 overflow-hidden">
+        <section id="innovation" className="py-24 bg-slate-50 border-y border-slate-200 overflow-hidden">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div>
@@ -119,12 +102,11 @@ export default function Home() {
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Visualizing Excellence</h2>
                 <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                  Our state-of-the-art laboratory ensures every batch meets rigorous standards for color consistency. 
                   Use our interactive tool to explore our standard vibrant palette tailored for high-UV environments.
                 </p>
                 
                 <ul className="space-y-4 mb-10">
-                  {['ISO 9001:2015 Certified Process', '100% Virgin Polymer Base', 'Custom Color Matching Available'].map((item, i) => (
+                  {['ISO 9001:2015 Certified Process', '100% Virgin Polymer Base', 'Custom Color Matching'].map((item, i) => (
                     <li key={i} className="flex items-center text-slate-700 font-medium">
                       <CheckCircle2 className="text-primary mr-3" size={20} />
                       {item}
@@ -132,12 +114,16 @@ export default function Home() {
                   ))}
                 </ul>
 
-                <Button className="bg-slate-900 text-white hover:bg-slate-800 rounded-full px-8 h-12">
-                  Download Color Chart
+                {/* Fixed: Scroll to the color mixer on the right */}
+                <Button 
+                  onClick={() => document.getElementById('color-mixer-panel')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-slate-900 text-white hover:bg-slate-800 rounded-full px-8 h-12"
+                >
+                  Start Color Mixer
                 </Button>
               </div>
               
-              <div className="relative">
+              <div className="relative" id="color-mixer-panel">
                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-amber-50 rounded-3xl transform rotate-3 scale-105" />
                  <div className="relative bg-white p-6 rounded-2xl shadow-xl border border-slate-100">
                     <InteractiveGranuleShowcase />
@@ -168,12 +154,11 @@ export default function Home() {
                     <GranulePileAnimation />
                  </div>
                  
-                 <div>
+                 <div id="downloads">
                     <h3 className="text-xl font-bold mb-4">Downloads</h3>
                     <BrochureGenerator />
                  </div>
               </div>
-
             </div>
           </div>
         </section>
@@ -221,7 +206,6 @@ export default function Home() {
         </section>
       </main>
 
-      {/* FOOTER */}
       <footer className="bg-white border-t border-slate-200 py-12">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm">
           <div className="mb-4 md:mb-0">

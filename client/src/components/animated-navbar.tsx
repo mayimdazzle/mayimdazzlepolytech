@@ -14,11 +14,18 @@ export default function AnimatedNavbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const navItems = [
-    { href: "#home", label: "Home" },
-    { href: "#products", label: "Sectors" },
-    { href: "#gallery", label: "Projects" },
-    { href: "#contact", label: "Contact" }
+    { href: "home", label: "Home" },
+    { href: "products", label: "Sectors" },
+    { href: "gallery", label: "Projects" },
+    { href: "contact", label: "Contact" }
   ];
 
   return (
@@ -30,8 +37,7 @@ export default function AnimatedNavbar() {
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Logo Section */}
-        <a href="#" className="flex items-center gap-3">
+        <a href="#" className="flex items-center gap-3" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }}>
           <div className="text-primary">
              <SvgLogo size={40} />
           </div>
@@ -45,23 +51,24 @@ export default function AnimatedNavbar() {
           </div>
         </a>
         
-        {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
-            <a
+            <button
               key={item.href}
-              href={item.href}
-              className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors uppercase tracking-wide"
+              onClick={() => scrollToSection(item.href)}
+              className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors uppercase tracking-wide bg-transparent border-none cursor-pointer"
             >
               {item.label}
-            </a>
+            </button>
           ))}
-          <Button className="bg-primary hover:bg-blue-700 text-white font-bold rounded-full px-6">
+          <Button 
+            onClick={() => scrollToSection('contact')}
+            className="bg-primary hover:bg-blue-700 text-white font-bold rounded-full px-6"
+          >
             Get Quote
           </Button>
         </div>
         
-        {/* Mobile Nav */}
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger asChild>
@@ -72,9 +79,13 @@ export default function AnimatedNavbar() {
             <SheetContent>
               <div className="flex flex-col space-y-6 mt-10">
                 {navItems.map((item) => (
-                  <a key={item.href} href={item.href} className="text-xl font-bold text-slate-900">
+                  <button 
+                    key={item.href} 
+                    onClick={() => { scrollToSection(item.href); }}
+                    className="text-xl font-bold text-slate-900 text-left"
+                  >
                     {item.label}
-                  </a>
+                  </button>
                 ))}
               </div>
             </SheetContent>
