@@ -93,14 +93,17 @@ export default function Home() {
           variants={sectionVariants}
         >
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
-              <div className="order-2 lg:order-1 relative">
-                 {/* Visual element for About section */}
-                 <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-amber-50 rounded-full blur-3xl opacity-60" />
-                 <GranulePileAnimation />
+            {/* items-stretch ensures both columns are same height */}
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-stretch max-w-6xl mx-auto">
+              
+              <div className="order-2 lg:order-1 relative h-full min-h-[500px]">
+                 {/* Background Blur Effect */}
+                 <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-amber-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
+                 {/* Animation fills the height */}
+                 <GranulePileAnimation className="h-full w-full" />
               </div>
               
-              <div className="order-1 lg:order-2 space-y-8">
+              <div className="order-1 lg:order-2 flex flex-col justify-center space-y-8 py-4">
                 <div>
                   <h2 className="text-4xl font-bold text-slate-900 mb-6">A Legacy of Innovation</h2>
                   <div className="prose prose-lg text-slate-600">
@@ -116,6 +119,7 @@ export default function Home() {
                 </div>
                 
                 <CompanyTimeline />
+                
               </div>
             </div>
           </div>

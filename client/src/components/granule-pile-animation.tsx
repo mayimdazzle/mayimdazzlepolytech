@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import SvgGranule from "./svg-granule";
+import { cn } from "@/lib/utils";
 
 interface GranulePileItem {
   id: number;
-  offsetX: number; // Percentage offset from center
-  offsetY: number; // Pixels from top
+  offsetX: number; // Percentage offset from center horizontal
+  offsetY: number; // Pixels from center vertical
   size: number;
   color: string;
   delay: number;
@@ -17,27 +18,31 @@ const colors = [
   "#8B5CF6", "#EC4899", "#F97316", "#06B6D4"
 ];
 
-export default function GranulePileAnimation() {
+interface GranulePileAnimationProps {
+  className?: string;
+}
+
+export default function GranulePileAnimation({ className }: GranulePileAnimationProps) {
   const [granules, setGranules] = useState<GranulePileItem[]>([]);
 
   useEffect(() => {
     const generateGranulePile = () => {
       const newGranules: GranulePileItem[] = [];
-      const baseVerticalPos = 180; // Center vertical
       
       // Create a pile effect with multiple layers
-      for (let layer = 0; layer < 5; layer++) {
-        const granulesInLayer = 6 - layer; // Fewer granules
+      for (let layer = 0; layer < 6; layer++) {
+        const granulesInLayer = 7 - layer; 
         
         for (let i = 0; i < granulesInLayer; i++) {
-          // Calculate distribution: spread granules around center
-          // Normalized range from -1 to 1
-          const spread = (i - (granulesInLayer - 1) / 2) * (15 + layer * 5); 
+          // Spread granules horizontally around center
+          const spread = (i - (granulesInLayer - 1) / 2) * (18 + layer * 4); 
           
           newGranules.push({
             id: layer * 10 + i,
-            offsetX: spread, // Percentage offset
-            offsetY: baseVerticalPos - layer * 25 + Math.random() * 10,
+            offsetX: spread, 
+            // Position relative to vertical center (0)
+            // Pile up from bottom (positive Y) to top (negative Y)
+            offsetY: (layer * 20) - 40 + (Math.random() * 10),
             size: 24 + Math.random() * 12,
             color: colors[Math.floor(Math.random() * colors.length)],
             delay: layer * 0.15 + i * 0.1,
@@ -53,7 +58,11 @@ export default function GranulePileAnimation() {
   }, []);
 
   return (
-    <div className="relative w-full h-[350px] md:h-[400px] bg-gradient-to-br from-slate-100 to-blue-50 rounded-3xl overflow-hidden shadow-inner border border-white">
+    <div className={cn(
+      "relative w-full bg-gradient-to-br from-slate-100 to-blue-50 rounded-3xl overflow-hidden shadow-inner border border-white",
+      "min-h-[400px]", // Default min-height safety
+      className
+    )}>
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-30">
         <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -66,53 +75,57 @@ export default function GranulePileAnimation() {
         </svg>
       </div>
       
-      {/* Granule pile */}
-      <div className="absolute inset-0">
-        {granules.map((granule) => (
-          <motion.div
-            key={granule.id}
-            className="absolute"
-            style={{
-              left: `calc(50% + ${granule.offsetX}%)`, // Responsive centering
-              top: `${granule.offsetY}px`,
-              zIndex: 10 - granule.layer,
-              x: "-50%" // Center the element itself
-            }}
-            initial={{ opacity: 0, scale: 0, y: -100 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{
-              duration: 0.6,
-              delay: granule.delay,
-              type: "spring",
-              damping: 12
-            }}
-          >
+      {/* Granule pile - Centered Container */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative w-full h-full">
+          {granules.map((granule) => (
             <motion.div
-              animate={{
-                rotate: [0, 5, -5, 0],
-                y: [0, -5, 0]
+              key={granule.id}
+              className="absolute"
+              style={{
+                left: `calc(50% + ${granule.offsetX}%)`,
+                top: `50%`, // Base at center
+                marginTop: `${granule.offsetY}px`, // Adjust from center
+                zIndex: 10 - granule.layer,
+                x: "-50%",
+                y: "-50%" 
               }}
+              initial={{ opacity: 0, scale: 0, y: -150 }}
+              animate={{ opacity: 1, scale: 1, y: "-50%" }}
               transition={{
-                duration: 4 + granule.layer,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: granule.delay
+                duration: 0.6,
+                delay: granule.delay,
+                type: "spring",
+                damping: 12
               }}
-              whileHover={{ scale: 1.2, rotate: 180 }}
-              className="cursor-pointer drop-shadow-md"
             >
-              <SvgGranule
-                color={granule.color}
-                size={granule.size}
-                animationDelay={0}
-              />
+              <motion.div
+                animate={{
+                  rotate: [0, 5, -5, 0],
+                  y: [0, -5, 0]
+                }}
+                transition={{
+                  duration: 4 + granule.layer,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: granule.delay
+                }}
+                whileHover={{ scale: 1.2, rotate: 180 }}
+                className="cursor-pointer drop-shadow-md"
+              >
+                <SvgGranule
+                  color={granule.color}
+                  size={granule.size}
+                  animationDelay={0}
+                />
+              </motion.div>
             </motion.div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
       
       {/* Title overlay */}
-      <div className="absolute bottom-6 left-0 right-0 text-center px-4">
+      <div className="absolute bottom-6 left-0 right-0 text-center px-4 pointer-events-none">
         <motion.div 
           className="bg-white/80 backdrop-blur-sm py-2 px-6 rounded-full inline-block shadow-sm"
           initial={{ opacity: 0, y: 20 }}
