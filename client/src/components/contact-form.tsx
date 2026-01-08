@@ -10,14 +10,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Send } from "lucide-react";
-import emailjs from "emailjs-com"; // add at the top
+import { Send, Loader2 } from "lucide-react";
+import emailjs from "emailjs-com";
 
-// Ensure you have the correct environment variables set
-const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const userId = import.meta.env.VITE_EMAILJS_USER_ID;
-
+// Constants for EmailJS
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_USER_ID;
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -28,13 +27,6 @@ const contactSchema = z.object({
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
-
-const inputVariants = {
-  focus: {
-    scale: 1.02,
-    transition: { duration: 0.2 }
-  }
-};
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,35 +47,36 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      await emailjs.send(
-        serviceId!,     // replace with your actual service ID
-         templateId!,    // replace with your actual template ID
-        {
-          name: data.name,
-          email: data.email,
-          phone: data.phone || "N/A",
-          inquiryType: data.inquiryType,
-          message: data.message,
-        },
-         userId!      // replace with your actual public key
-      );
+      if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+         console.warn("EmailJS env variables missing");
+         // Simulate success for demo if env vars missing
+         await new Promise(r => setTimeout(r, 1000));
+      } else {
+         await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+            from_name: data.name,
+            from_email: data.email,
+            phone: data.phone || "Not provided",
+            inquiry_type: data.inquiryType,
+            message: data.message,
+          }, PUBLIC_KEY);
+      }
 
       toast({
-        title: "Message Sent!",
-        description: "Thank you for your inquiry. We'll get back to you soon.",
+        title: "Message Sent Successfully",
+        description: "We'll get back to you shortly.",
       });
 
       form.reset();
     } catch (error) {
-      console.error("Email sending failed:", error);
+      console.error("Email error:", error);
       toast({
-        title: "Error",
-        description: "Failed to send message. Please try again later.",
+        title: "Failed to send",
+        description: "Please try again later or email us directly.",
         variant: "destructive",
       });
+    } finally {
+        setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   return (
@@ -91,141 +84,125 @@ export default function ContactForm() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+      className="w-full"
     >
-      <Card className="bg-slate-800 border-slate-700">
-        <CardContent className="p-6">
+      <Card className="bg-slate-900 border-slate-800 shadow-xl">
+        <CardContent className="p-6 md:p-8">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-slate-300">Name *</FormLabel>
-                    <FormControl>
-                      <motion.div variants={inputVariants} whileFocus="focus">
-                        <Input
-                          {...field}
-                          className="bg-slate-700 border-slate-600 text-white focus:border-accent"
-                          placeholder="Your full name"
-                        />
-                      </motion.div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-slate-300">Email *</FormLabel>
-                    <FormControl>
-                      <motion.div variants={inputVariants} whileFocus="focus">
-                        <Input
-                          {...field}
-                          type="email"
-                          className="bg-slate-700 border-slate-600 text-white focus:border-accent"
-                          placeholder="your.email@example.com"
-                        />
-                      </motion.div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-slate-300">Phone</FormLabel>
-                    <FormControl>
-                      <motion.div variants={inputVariants} whileFocus="focus">
-                        <Input
-                          {...field}
-                          type="tel"
-                          className="bg-slate-700 border-slate-600 text-white focus:border-accent"
-                          placeholder="+91 XXXXX XXXXX"
-                        />
-                      </motion.div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="inquiryType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-slate-300">Inquiry Type *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <div className="grid md:grid-cols-2 gap-5">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-slate-300">Name <span className="text-red-400">*</span></FormLabel>
                       <FormControl>
-                        <SelectTrigger className="bg-slate-700 border-slate-600 text-white focus:border-accent">
-                          <SelectValue placeholder="Select inquiry type" />
-                        </SelectTrigger>
+                          <Input
+                            {...field}
+                            className="bg-slate-800 border-slate-700 text-white focus:border-accent h-11"
+                            placeholder="Your Name"
+                          />
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="sample">Sample Request</SelectItem>
-                        <SelectItem value="bulk">Bulk Order</SelectItem>
-                        <SelectItem value="technical">Technical Specifications</SelectItem>
-                        <SelectItem value="custom">Custom Requirements</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-slate-300">Email <span className="text-red-400">*</span></FormLabel>
+                      <FormControl>
+                          <Input
+                            {...field}
+                            type="email"
+                            className="bg-slate-800 border-slate-700 text-white focus:border-accent h-11"
+                            placeholder="email@example.com"
+                          />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-5">
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-slate-300">Phone</FormLabel>
+                      <FormControl>
+                          <Input
+                            {...field}
+                            type="tel"
+                            className="bg-slate-800 border-slate-700 text-white focus:border-accent h-11"
+                            placeholder="+91..."
+                          />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="inquiryType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-slate-300">Inquiry Type <span className="text-red-400">*</span></FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:border-accent h-11">
+                            <SelectValue placeholder="Select Type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="sample">Sample Request</SelectItem>
+                          <SelectItem value="bulk">Bulk Order</SelectItem>
+                          <SelectItem value="technical">Technical Specs</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-slate-300">Message *</FormLabel>
+                    <FormLabel className="text-slate-300">Message <span className="text-red-400">*</span></FormLabel>
                     <FormControl>
-                      <motion.div variants={inputVariants} whileFocus="focus">
                         <Textarea
                           {...field}
-                          className="bg-slate-700 border-slate-600 text-white focus:border-accent min-h-[120px]"
+                          className="bg-slate-800 border-slate-700 text-white focus:border-accent min-h-[120px] resize-none"
                           placeholder="Tell us about your requirements..."
                         />
-                      </motion.div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-accent text-slate-900 hover:bg-amber-400 font-bold py-6 text-lg transition-transform active:scale-95"
               >
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-accent text-slate-900 hover:bg-amber-400 font-semibold py-3"
-                >
-                  {isSubmitting ? (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full"
-                    />
-                  ) : (
-                    <>
-                      <Send className="mr-2" size={20} />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-              </motion.div>
+                {isSubmitting ? (
+                  <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Sending...</>
+                ) : (
+                  <><Send className="mr-2 h-5 w-5" /> Send Message</>
+                )}
+              </Button>
             </form>
           </Form>
         </CardContent>

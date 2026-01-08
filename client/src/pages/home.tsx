@@ -11,12 +11,11 @@ import GranulePileAnimation from "@/components/granule-pile-animation";
 import ClientsMarquee from "@/components/clients-marquee";
 import ProjectGallery from "@/components/project-gallery";
 import StatsSection from "@/components/stats-section";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Factory, Palette, Shield, Ruler, MapPin, Phone, Mail, ExternalLink } from "lucide-react";
+import { Factory, MapPin, Phone, Mail, ExternalLink, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 50 },
+  hidden: { opacity: 0, y: 30 },
   visible: { 
     opacity: 1, 
     y: 0,
@@ -24,23 +23,8 @@ const sectionVariants = {
   }
 };
 
-const cardVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { 
-    opacity: 1, 
-    scale: 1,
-    transition: { duration: 0.6, ease: "easeOut" }
-  },
-  hover: { 
-    y: -8,
-    scale: 1.02,
-    transition: { duration: 0.3 }
-  }
-};
-
 export default function Home() {
   useEffect(() => {
-    // Smooth scrolling for navigation links
     const handleSmoothScroll = (e: Event) => {
       const target = e.target as HTMLAnchorElement;
       if (target.hash) {
@@ -51,347 +35,183 @@ export default function Home() {
         }
       }
     };
-
     document.addEventListener('click', handleSmoothScroll);
     return () => document.removeEventListener('click', handleSmoothScroll);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-x-hidden" id="home">
+    <div className="min-h-screen bg-white overflow-x-hidden font-sans" id="home">
       <ParticleBackground />
       <AnimatedNavbar />
-      <AnimatedHero />
-      <ClientsMarquee />
       
-      {/* About Section */}
-      <motion.section 
-        id="about"
-        className="py-20 bg-white relative z-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              className="text-center mb-16"
-              variants={sectionVariants}
-            >
-              <h2 className="text-4xl font-bold text-slate-900 mb-4">About Mayim Dazzle Polytech</h2>
-              <p className="text-xl text-slate-600">20+ Years of Legacy in Industrial Solutions</p>
-            </motion.div>
+      <main>
+        {/* 1. Hero Section */}
+        <AnimatedHero />
+        
+        {/* 2. Trust Indicators */}
+        <ClientsMarquee />
+        
+        {/* 3. Main Product Focus */}
+        <motion.section 
+          id="products"
+          className="py-24 bg-slate-50 relative z-10"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={sectionVariants}
+        >
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16 max-w-3xl mx-auto">
+              <span className="text-accent font-semibold tracking-wider uppercase text-sm">Our Core Product</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mt-2 mb-6">Premium EPDM Granules</h2>
+              <p className="text-xl text-slate-600">
+                Engineered for durability, available in vibrant colors, and customized for your specific application needs.
+              </p>
+            </div>
             
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <motion.div 
-                className="relative"
-                variants={cardVariants}
-                whileHover="hover"
-              >
-                <GranulePileAnimation />
-              </motion.div>
+            <ProductShowcase />
+            
+            <div className="mt-20">
+              <InteractiveGranuleShowcase />
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 4. Stats & Impact */}
+        <StatsSection />
+
+        {/* 5. Project Gallery (New Site Photos) */}
+        <ProjectGallery />
+
+        {/* 6. Company History/About */}
+        <motion.section 
+          id="about"
+          className="py-24 bg-white relative z-10"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={sectionVariants}
+        >
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
+              <div className="order-2 lg:order-1 relative">
+                 {/* Visual element for About section */}
+                 <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-amber-50 rounded-full blur-3xl opacity-60" />
+                 <GranulePileAnimation />
+              </div>
               
-              <div className="space-y-6">
-                <motion.div 
-                  className="bg-gradient-to-r from-primary/5 to-accent/5 p-6 rounded-xl"
-                  variants={cardVariants}
-                  whileHover="hover"
-                >
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">Our Heritage</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    <strong>Mayim Dazzle Polytech</strong> is the newest subsidiary of 
-                    <strong> MayimDazzle India Private Limited</strong>, drawing from the rich legacy 
-                    of <strong>Dazzle Infomedia</strong> — a trusted name in software and industrial 
-                    solutions for over 20 years.
-                  </p>
-                </motion.div>
-                
-                <motion.div 
-                  className="bg-gradient-to-r from-accent/5 to-primary/5 p-6 rounded-xl"
-                  variants={cardVariants}
-                  whileHover="hover"
-                >
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">Our Mission</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    Operating from India, we focus on manufacturing <strong>EPDM Rubber Granules </strong> 
-                    with unmatched flexibility in color and size customization, backed by experienced 
-                    rubber technologists.
-                  </p>
-                </motion.div>
+              <div className="order-1 lg:order-2 space-y-8">
+                <div>
+                  <h2 className="text-4xl font-bold text-slate-900 mb-6">A Legacy of Innovation</h2>
+                  <div className="prose prose-lg text-slate-600">
+                    <p className="mb-4">
+                      <strong>Mayim Dazzle Polytech</strong> represents the convergence of manufacturing excellence and technological innovation. 
+                      As a subsidiary of <strong>MayimDazzle India Pvt Ltd</strong>, we carry forward a 20-year legacy started by Dazzle Infomedia.
+                    </p>
+                    <p>
+                      Located in Dharmapuri, Tamil Nadu, our state-of-the-art facility is dedicated to producing high-grade EPDM rubber granules 
+                      that set industry standards for color consistency and weather resistance.
+                    </p>
+                  </div>
+                </div>
                 
                 <CompanyTimeline />
               </div>
             </div>
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
 
-      <StatsSection />
-
-      {/* Products Section */}
-      <motion.section 
-        id="products"
-        className="py-20 bg-slate-50 relative z-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              className="text-center mb-16"
-              variants={sectionVariants}
-            >
-              <h2 className="text-4xl font-bold text-slate-900 mb-4">EPDM Rubber Granules</h2>
-              <p className="text-xl text-slate-600">Precision-Engineered for Superior Performance</p>
-            </motion.div>
-            
-            <ProductShowcase />
-            
-            {/* Interactive Granule Showcase */}
-            <motion.div 
-              className="mt-12"
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              <InteractiveGranuleShowcase />
-            </motion.div>
-            
-            {/* Quality Excellence */}
-            <motion.div 
-              className="mt-12 bg-white p-8 rounded-xl shadow-lg"
-              variants={cardVariants}
-              whileHover="hover"
-            >
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">Quality Excellence</h3>
-                <p className="text-slate-600">Superior performance for demanding applications</p>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-6">
-                {[
-                  { value: "Superior", label: "Weather Resistance", color: "from-primary/10 to-accent/10" },
-                  { value: "Excellent", label: "Durability", color: "from-accent/10 to-primary/10" },
-                  { value: "Premium", label: "Quality", color: "from-green-100 to-blue-100" }
-                ].map((spec, index) => (
-                  <motion.div 
-                    key={index}
-                    className={`text-center p-6 bg-gradient-to-br ${spec.color} rounded-lg`}
-                    variants={cardVariants}
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <div className="text-3xl font-bold text-primary mb-2">{spec.value}</div>
-                    <div className="text-sm text-slate-600">{spec.label}</div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+        {/* 7. Contact */}
+        <motion.section 
+          id="contact"
+          className="py-24 bg-slate-900 text-white relative z-10"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={sectionVariants}
+        >
+          {/* Background pattern */}
+          <div className="absolute inset-0 opacity-10" 
+               style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '40px 40px' }}>
           </div>
-        </div>
-      </motion.section>
 
-      <ProjectGallery />
-
-      {/* Applications Section */}
-      <motion.section 
-        className="py-20 bg-white relative z-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              className="text-center mb-16"
-              variants={sectionVariants}
-            >
-              <h2 className="text-4xl font-bold text-slate-900 mb-4">Applications</h2>
-              <p className="text-xl text-slate-600">Versatile Solutions for Multiple Industries</p>
-            </motion.div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-                  title: "Sports Flooring",
-                  description: "High-performance surfaces for athletic facilities, gyms, and sports complexes"
-                },
-                {
-                  image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-                  title: "Playground Safety",
-                  description: "Safe, durable surfaces for playgrounds and recreational areas"
-                },
-                {
-                  image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
-                  title: "Industrial Safety",
-                  description: "Anti-slip surfaces for industrial environments and safety applications"
-                }
-              ].map((app, index) => (
-                <motion.div 
-                  key={index}
-                  className="bg-slate-50 p-8 rounded-xl"
-                  variants={cardVariants}
-                  whileHover="hover"
-                >
-                  <img 
-                    src={app.image} 
-                    alt={app.title}
-                    className="rounded-lg w-full h-48 object-cover mb-4"
-                  />
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{app.title}</h3>
-                  <p className="text-slate-600">{app.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Contact Section */}
-      <motion.section 
-        id="contact"
-        className="py-20 bg-slate-900 text-white relative z-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-      >
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              className="text-center mb-16"
-              variants={sectionVariants}
-            >
-              <h2 className="text-4xl font-bold mb-4">Get in Touch</h2>
-              <p className="text-xl text-slate-300">Ready to collaborate? Contact us for samples, queries, or orders</p>
-            </motion.div>
-            
-            <div className="grid md:grid-cols-2 gap-12">
-              <ContactForm />
-              
-              <motion.div 
-                className="space-y-8"
-                variants={cardVariants}
-              >
+          <div className="container mx-auto px-4 relative">
+            <div className="max-w-6xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-16">
                 <div>
-                  <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <MapPin className="text-accent" size={20} />
+                  <h2 className="text-4xl font-bold mb-6">Let's Build Something Great</h2>
+                  <p className="text-xl text-slate-300 mb-10">
+                    Need a quote for your next sports complex or playground project? 
+                    Our team is ready to assist with samples and technical specifications.
+                  </p>
+                  
+                  <div className="space-y-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="bg-white/10 p-3 rounded-lg text-accent">
+                        <MapPin size={24} />
+                      </div>
                       <div>
-                        <div className="font-medium">Address</div>
-                        <div className="text-slate-300">Dharmapuri, Tamil Nadu, India</div>
+                        <h4 className="font-semibold text-lg">Factory Address</h4>
+                        <p className="text-slate-400 mt-1">Dharmapuri, Tamil Nadu, India</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <Phone className="text-accent" size={20} />
+                    
+                    <div className="flex items-start space-x-4">
+                      <div className="bg-white/10 p-3 rounded-lg text-accent">
+                        <Phone size={24} />
+                      </div>
                       <div>
-                        <div className="font-medium">Phone</div>
-                        <div className="text-slate-300">+91 94883 94000</div>
+                        <h4 className="font-semibold text-lg">Contact Number</h4>
+                        <p className="text-slate-400 mt-1">+91 94883 94000</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <Mail className="text-accent" size={20} />
+
+                    <div className="flex items-start space-x-4">
+                      <div className="bg-white/10 p-3 rounded-lg text-accent">
+                        <Mail size={24} />
+                      </div>
                       <div>
-                        <div className="font-medium">Email</div>
-                        <div className="text-slate-300">info@polytech.mayimdazzle.com</div>
+                        <h4 className="font-semibold text-lg">Email Us</h4>
+                        <p className="text-slate-400 mt-1">info@polytech.mayimdazzle.com</p>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="mt-12 p-6 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="bg-primary p-2 rounded-lg">
+                        <Factory className="text-white" size={20} />
+                      </div>
+                      <div>
+                        <div className="font-bold">Parent Company</div>
+                        <div className="text-sm text-slate-400">MayimDazzle India Pvt Ltd</div>
+                      </div>
+                    </div>
+                    <a 
+                      href="https://mayimdazzle.com" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm text-accent hover:text-white transition-colors flex items-center"
+                    >
+                      Visit Corporate Website <ExternalLink size={14} className="ml-1" />
+                    </a>
                   </div>
                 </div>
-                
-                <motion.div 
-                  className="bg-slate-800 p-6 rounded-lg"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <h3 className="text-xl font-bold mb-4">Parent Company</h3>
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                      <Factory size={16} className="text-white" />
-                    </div>
-                    <div>
-                      <div className="font-semibold">MayimDazzle India Private Limited</div>
-                      <div className="text-sm text-slate-400">Software Engineering & Solutions</div>
-                    </div>
-                  </div>
-                  <div className="text-sm text-slate-300 mb-4">
-                    <p>Visit our parent company for web design, application development, and offshore software services.</p>
-                  </div>
-                  <a 
-                    href="https://mayimdazzle.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-accent hover:text-amber-400 transition-colors"
-                  >
-                    <span className="mr-2">Visit MayimDazzle.com</span>
-                    <ExternalLink size={16} />
-                  </a>
-                </motion.div>
-              </motion.div>
+
+                <div className="bg-white rounded-2xl p-8 text-slate-900 shadow-2xl">
+                  <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
+                  <ContactForm />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
+      </main>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-white py-12 relative z-10">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-4 gap-8">
-              <div>
-                <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <Factory size={16} className="text-white" />
-                  </div>
-                  <div>
-                    <div className="font-bold">Mayim Dazzle Polytech</div>
-                    <div className="text-xs text-slate-400">Manufacturing Excellence</div>
-                  </div>
-                </div>
-                <p className="text-slate-400 text-sm">
-                  Precision-engineered EPDM rubber granules for superior performance applications.
-                </p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-4">Products</h4>
-                <ul className="space-y-2 text-sm text-slate-400">
-                  <li>EPDM Granules</li>
-                  <li>Custom Colors</li>
-                  <li>Multiple Sizes</li>
-                  <li>Quality Assured</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-4">Applications</h4>
-                <ul className="space-y-2 text-sm text-slate-400">
-                  <li>Sports Flooring</li>
-                  <li>Playground Safety</li>
-                  <li>Industrial Safety</li>
-                  <li>Custom Solutions</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-4">Company</h4>
-                <ul className="space-y-2 text-sm text-slate-400">
-                  <li><a href="#about" className="hover:text-accent transition-colors">About Us</a></li>
-                  <li><a href="#contact" className="hover:text-accent transition-colors">Contact</a></li>
-                  <li><a href="https://mayimdazzle.com" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Parent Company</a></li>
-                  <li>Quality Assurance</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400 text-sm">
-              <p>&copy; 2024 Mayim Dazzle Polytech. A subsidiary of MayimDazzle India Private Limited. All rights reserved.</p>
-            </div>
-          </div>
+      <footer className="bg-black text-white py-12 border-t border-white/10">
+        <div className="container mx-auto px-4 text-center text-slate-500 text-sm">
+          <p>&copy; 2024 Mayim Dazzle Polytech. All rights reserved.</p>
         </div>
       </footer>
     </div>

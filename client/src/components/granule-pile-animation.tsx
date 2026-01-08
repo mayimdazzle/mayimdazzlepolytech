@@ -4,8 +4,8 @@ import SvgGranule from "./svg-granule";
 
 interface GranulePileItem {
   id: number;
-  x: number;
-  y: number;
+  offsetX: number; // Percentage offset from center
+  offsetY: number; // Pixels from top
   size: number;
   color: string;
   delay: number;
@@ -23,23 +23,24 @@ export default function GranulePileAnimation() {
   useEffect(() => {
     const generateGranulePile = () => {
       const newGranules: GranulePileItem[] = [];
+      const baseVerticalPos = 180; // Center vertical
       
       // Create a pile effect with multiple layers
       for (let layer = 0; layer < 5; layer++) {
-        const granulesInLayer = 8 - layer;
-        const layerWidth = 200 + layer * 40;
+        const granulesInLayer = 6 - layer; // Fewer granules
         
         for (let i = 0; i < granulesInLayer; i++) {
-          const angle = (i / granulesInLayer) * Math.PI * 2;
-          const radius = 30 + layer * 25;
+          // Calculate distribution: spread granules around center
+          // Normalized range from -1 to 1
+          const spread = (i - (granulesInLayer - 1) / 2) * (15 + layer * 5); 
           
           newGranules.push({
             id: layer * 10 + i,
-            x: Math.cos(angle) * radius + layerWidth / 2,
-            y: Math.sin(angle) * radius + 150 - layer * 15,
-            size: 20 + Math.random() * 10,
+            offsetX: spread, // Percentage offset
+            offsetY: baseVerticalPos - layer * 25 + Math.random() * 10,
+            size: 24 + Math.random() * 12,
             color: colors[Math.floor(Math.random() * colors.length)],
-            delay: layer * 0.2 + i * 0.1,
+            delay: layer * 0.15 + i * 0.1,
             layer
           });
         }
@@ -52,13 +53,13 @@ export default function GranulePileAnimation() {
   }, []);
 
   return (
-    <div className="relative w-full h-80 bg-gradient-to-br from-slate-100 to-blue-100 rounded-2xl overflow-hidden">
+    <div className="relative w-full h-[350px] md:h-[400px] bg-gradient-to-br from-slate-100 to-blue-50 rounded-3xl overflow-hidden shadow-inner border border-white">
       {/* Background pattern */}
-      <div className="absolute inset-0 opacity-20">
-        <svg width="100%" height="100%" viewBox="0 0 400 300">
-          <defs>
-            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#3B82F6" strokeWidth="0.5"/>
+      <div className="absolute inset-0 opacity-30">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+           <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#94a3b8" strokeWidth="0.5"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
@@ -66,93 +67,60 @@ export default function GranulePileAnimation() {
       </div>
       
       {/* Granule pile */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative">
-          {granules.map((granule) => (
+      <div className="absolute inset-0">
+        {granules.map((granule) => (
+          <motion.div
+            key={granule.id}
+            className="absolute"
+            style={{
+              left: `calc(50% + ${granule.offsetX}%)`, // Responsive centering
+              top: `${granule.offsetY}px`,
+              zIndex: 10 - granule.layer,
+              x: "-50%" // Center the element itself
+            }}
+            initial={{ opacity: 0, scale: 0, y: -100 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{
+              duration: 0.6,
+              delay: granule.delay,
+              type: "spring",
+              damping: 12
+            }}
+          >
             <motion.div
-              key={granule.id}
-              className="absolute"
-              style={{
-                left: `${granule.x}px`,
-                top: `${granule.y}px`,
-                zIndex: 5 - granule.layer,
+              animate={{
+                rotate: [0, 5, -5, 0],
+                y: [0, -5, 0]
               }}
-              initial={{ opacity: 0, scale: 0, y: -50 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{
-                duration: 0.5,
-                delay: granule.delay,
-                type: "spring",
-                stiffness: 100,
-                damping: 10
+                duration: 4 + granule.layer,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: granule.delay
               }}
+              whileHover={{ scale: 1.2, rotate: 180 }}
+              className="cursor-pointer drop-shadow-md"
             >
-              <motion.div
-                animate={{
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 3 + granule.layer * 0.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: granule.delay + 1
-                }}
-                whileHover={{ scale: 1.2, rotate: 360 }}
-                className="cursor-pointer"
-              >
-                <SvgGranule
-                  color={granule.color}
-                  size={granule.size}
-                  animationDelay={granule.delay}
-                />
-              </motion.div>
+              <SvgGranule
+                color={granule.color}
+                size={granule.size}
+                animationDelay={0}
+              />
             </motion.div>
-          ))}
-        </div>
+          </motion.div>
+        ))}
       </div>
       
-      {/* Floating particles */}
-      {[...Array(12)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-primary rounded-full opacity-40"
-          style={{
-            left: `${10 + i * 7}%`,
-            top: `${20 + (i % 3) * 20}%`,
-          }}
-          animate={{
-            y: [0, -20, 0],
-            opacity: [0.4, 0.8, 0.4],
-            scale: [1, 1.5, 1]
-          }}
-          transition={{
-            duration: 2 + i * 0.3,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: i * 0.2
-          }}
-        />
-      ))}
-      
       {/* Title overlay */}
-      <div className="absolute bottom-4 left-4 right-4 text-center">
-        <motion.h4 
-          className="text-lg font-bold text-slate-800 mb-2"
+      <div className="absolute bottom-6 left-0 right-0 text-center px-4">
+        <motion.div 
+          className="bg-white/80 backdrop-blur-sm py-2 px-6 rounded-full inline-block shadow-sm"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2 }}
+          transition={{ delay: 1.5 }}
         >
-          Premium EPDM Granules
-        </motion.h4>
-        <motion.p 
-          className="text-sm text-slate-600"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.2 }}
-        >
-          Multiple colors and sizes available for your specific needs
-        </motion.p>
+          <h4 className="text-sm font-bold text-slate-900">Premium EPDM Granules</h4>
+        </motion.div>
       </div>
     </div>
   );
